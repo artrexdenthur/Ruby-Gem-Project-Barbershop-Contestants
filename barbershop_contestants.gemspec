@@ -1,17 +1,17 @@
 
-lib = File.expand_path("../lib", __FILE__)
+lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "barbershop_contestants/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "barbershop_contestants"
   spec.version       = BarbershopContestants::VERSION
-  spec.authors       = ["TODO: Write your name"]
-  spec.email         = ["TODO: Write your email address"]
+  spec.authors       = ["Paul Ashour"]
+  spec.email         = ["paul.ashour@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = "A quick Ruby Gem that scrapes barbershopwiki.com for the Learn.co Ruby CLI project."
+  spec.description   = "This Gem scrapes barbershopwiki.com and organizes the data for perusal via a simple CLI. Created for the Ruby CLI project in section one of Learn.co's Full Stack Web Development program."
+  spec.homepage      = "https://github.com/artrexdenthur/Ruby-Gem-Project-Barbershop-Contestants"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
     spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
     spec.metadata["homepage_uri"] = spec.homepage
-    spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
+    spec.metadata["source_code_uri"] = "https://github.com/artrexdenthur/oo-student-scraper-online-web-pt-102218.git"
     spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
   else
     raise "RubyGems 2.0 or newer is required to protect against " \
@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
-  spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
+  spec.files = Dir.chdir(File.expand_path(__dir__)) do
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   end
   spec.bindir        = "exe"
@@ -37,5 +37,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.17"
+  spec.add_development_dependency "github_changelog_generator"
+  spec.add_development_dependency "pry"
   spec.add_development_dependency "rake", "~> 10.0"
+
+  spec.add_runtime_dependency "nokogiri"
+
 end

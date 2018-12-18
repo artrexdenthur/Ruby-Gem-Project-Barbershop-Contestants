@@ -20,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Follow the prompts to drill down into the various participants in the BHS International Competition
 
 ## Development
 
