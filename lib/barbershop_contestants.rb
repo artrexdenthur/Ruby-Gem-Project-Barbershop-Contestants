@@ -10,7 +10,7 @@ end
 doc = Nokogiri::HTML(open(QUARTET_CHAMPS_SITE))
 doc.css(".wikitable tbody tr").each_with_index do |row, index|
   if index > 0
-    row_data = row.split('\n')
+    row_data = row.text.split('\n')
     q_champs_hash = {
       year: row_data[0],
       quartet_name: row_data[1],
@@ -19,7 +19,7 @@ doc.css(".wikitable tbody tr").each_with_index do |row, index|
       comments: row_data[4],
       members: row_data[5]
     }
-    Performance.create
+    Performance.create(q_champs_hash)
 
   end
 end
