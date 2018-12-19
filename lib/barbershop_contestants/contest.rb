@@ -1,10 +1,8 @@
 # holds the data specific to each contest
-module BarbershopContestants::Contest
-    class Quartets
+class BarbershopContestants::Contest
+  # now there's text again
+  attr_accessor :performances, :year, :city
+  def foo
 
-    end
-
-    class Choruses
-
-    end
+  end
 end
