@@ -37,10 +37,11 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.17"
-  spec.add_development_dependency "github_changelog_generator"
-  spec.add_development_dependency "pry"
+  spec.add_development_dependency "github_changelog_generator", "~> 1.14.3"
+  spec.add_development_dependency "pry", "~> 0.12.2"
   spec.add_development_dependency "rake", "~> 10.0"
 
-  spec.add_runtime_dependency "nokogiri"
+  spec.add_runtime_dependency "nokogiri", "~> 1.8.5"
+  spec.add_runtime_dependency "require_all", "~> 2.0.0"
 
 end

@@ -1,8 +1,8 @@
-require "barbershop_contestants/version"
+require_all "./lib"
 
 module BarbershopContestants
   class Error < StandardError; end
-  # Your code goes here...
+  # Your code goes hereh
 end
 
 puts "Hello World!"
@@ -13,3 +13,7 @@ puts "Hello World!"
 #   # v = values
 #   class.send("#{k}=", v)
 # end
+
+# A line of text
+
+# rake install local to

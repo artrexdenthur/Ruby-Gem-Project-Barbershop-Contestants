@@ -2,7 +2,8 @@ PATH
   remote: .
   specs:
     barbershop_contestants (0.1.0)
-      nokogiri
+      nokogiri (~> 1.8.5)
+      require_all (~> 2.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -45,6 +46,7 @@ GEM
     public_suffix (3.0.3)
     rainbow (3.0.0)
     rake (10.5.0)
+    require_all (2.0.0)
     retriable (2.1.0)
     sawyer (0.8.1)
       addressable (>= 2.3.5, < 2.6)
@@ -59,8 +61,8 @@ PLATFORMS
 DEPENDENCIES
   barbershop_contestants!
   bundler (~> 1.17)
-  github_changelog_generator
-  pry
+  github_changelog_generator (~> 1.14.3)
+  pry (~> 0.12.2)
   rake (~> 10.0)
 
 BUNDLED WITH
