@@ -1,4 +1,10 @@
 # holds the data specific to each contest
-class BarbershopContestants::Contest
-  # now there's text again
+module BarbershopContestants::Contest
+    class Quartets
+
+    end
+
+    class Choruses
+
+    end
 end

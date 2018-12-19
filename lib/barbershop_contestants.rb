@@ -6,6 +6,8 @@ module BarbershopContestants
 end
 
 puts "Hello World!"
+
+
 ### Remember this pattern: ###
 
 # properties.each do |k, v|
