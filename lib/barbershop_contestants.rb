@@ -9,22 +9,25 @@ end
 
 doc = Scraper.scrape_quartet_champs
 doc.each_with_index do |row, index|
-  binding.pry
-  if index > 0
-    row_data = row.text.split("\n") # sic. Literal "\n"'s rather than newline characters.
-    q_champs_hash = {
-      year: row_data[1],
-      quartet_name: row_data[2],
-      score: row_data[3],
-      district: row_data[4],
-      comments: row_data[5],
-      members: row_data[7],
-      place: 1 # champions definitionally are first place
-    }
-    Performance.create_champs(q_champs_hash)
+  # binding.pry
+  row_data = row.text.split("\n")
+  q_champs_hash = {
+    year: row_data[1],
+    name: row_data[2],
+    score: row_data[3],
+    district: row_data[4],
+    comments: row_data[5],
+    members: row_data[7],
+    place: 1, # champions definitionally are first place
+    type: "quartet"
+  }
+  Performance.create_q_champ(q_champs_hash)
+  # binding.pry
 
-  end
 end
+
+# binding.pry
+CLI.print_quartet_champs_by_year
 ### Remember this pattern: ###
 
 # properties.each do |k, v|

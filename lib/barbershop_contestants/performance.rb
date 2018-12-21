@@ -23,11 +23,17 @@ class Performance
     performance
   end
 
-  def self.create_q_champs(q_champs_hash)
+  def self.create_q_champ(q_champs_hash)
     performance = self.create(q_champs_hash)
-    self.competitor = Quartet.find_or_create(q_champs_hash)
-    self.contest = Contest.find_or_create_(q_champs_hash)
+    performance.competitor = Quartet.find_or_create(q_champs_hash)
+    performance.competitor.performances << performance
+    performance.contest = Contest.find_or_create(q_champs_hash)
+    performance.contest.performances << performance
     performance
+  end
+
+  def self.q_champs_by_year
+    self.all.select { |p| p.place == 1 && p.contest.type = "quartet" }.sort_by { |p| p.year }
   end
 
   def self.all
