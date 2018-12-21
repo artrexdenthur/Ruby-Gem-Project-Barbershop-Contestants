@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
+<<<<<<< HEAD
   if spec.respond_to?(:metadata)
     spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
@@ -26,14 +27,26 @@ Gem::Specification.new do |spec|
     raise "RubyGems 2.0 or newer is required to protect against " \
       "public gem pushes."
   end
+=======
+  # if spec.respond_to?(:metadata)
+  #   spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
+  #
+  #   spec.metadata["homepage_uri"] = spec.homepage
+  #   spec.metadata["source_code_uri"] = "https://github.com/artrexdenthur/oo-student-scraper-online-web-pt-102218.git"
+  #   spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
+  # else
+  #   raise "RubyGems 2.0 or newer is required to protect against " \
+  #     "public gem pushes."
+  # end
+>>>>>>> eb8e33879e8e26fa16d144cf4f618d028e6f1624
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   end
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.bindir        = "bin"
+  spec.executables   = ["barbershop_contestants"]
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.17"
