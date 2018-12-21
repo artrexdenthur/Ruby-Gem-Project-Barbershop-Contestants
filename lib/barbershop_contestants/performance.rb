@@ -2,21 +2,27 @@
 class Performance
   attr_accessor :competiton, :competitor, :score, :place
 
-  @all = []
+  @@all = []
 
-  def initialize(year:)
-    self.year = year.to_i
+  def initialize(arg_hash)
+    self.year = arg_hash[:year] if arg_hash[:year]
   end
 
   def save
-    @all < self
+    @@all << self
+  end
+
+  def self.create(arg_hash)
+    performance = self.initialize(arg_hash)
+    performance.save
+    performance
   end
 
   def self.all
-    @all
+    @@all
   end
 
   def self.clear
-    @all.clear
+    @@all.clear
   end
 end

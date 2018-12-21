@@ -1,16 +1,17 @@
 require_all "./lib"
 
-QUARTET_CHAMPS_SITE = "https://www.barbershopwiki.com/wiki/BHS_International_Quartet_Champions"
+# QUARTET_CHAMPS_SITE = "https://www.barbershopwiki.com/wiki/BHS_International_Quartet_Champions"
 
 module BarbershopContestants
   class Error < StandardError; end
   # Your code goes here
 end
 
-doc = Nokogiri::HTML(open(QUARTET_CHAMPS_SITE))
+doc = Scraper.scrape_quartet_champs
 doc.css(".wikitable tbody tr").each_with_index do |row, index|
+  binding.pry
   if index > 0
-    row_data = row.split('\n')
+    row_data = row.text.split('\n')
     q_champs_hash = {
       year: row_data[0],
       quartet_name: row_data[1],
