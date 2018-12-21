@@ -16,18 +16,6 @@ Gem::Specification.new do |spec|
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
-<<<<<<< HEAD
-  if spec.respond_to?(:metadata)
-    spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-
-    spec.metadata["homepage_uri"] = spec.homepage
-    spec.metadata["source_code_uri"] = "https://github.com/artrexdenthur/oo-student-scraper-online-web-pt-102218.git"
-    spec.metadata["changelog_uri"] = "https://github.com/artrexdenthur/Ruby-Gem-Project-Barbershop-Contestants/blob/master/CHANGELOG.md"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
-  end
-=======
   # if spec.respond_to?(:metadata)
   #   spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
   #
@@ -38,7 +26,6 @@ Gem::Specification.new do |spec|
   #   raise "RubyGems 2.0 or newer is required to protect against " \
   #     "public gem pushes."
   # end
->>>>>>> eb8e33879e8e26fa16d144cf4f618d028e6f1624
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.

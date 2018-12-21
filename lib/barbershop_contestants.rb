@@ -8,19 +8,20 @@ module BarbershopContestants
 end
 
 doc = Scraper.scrape_quartet_champs
-doc.css(".wikitable tbody tr").each_with_index do |row, index|
+doc.each_with_index do |row, index|
   binding.pry
   if index > 0
-    row_data = row.text.split('\n')
+    row_data = row.text.split("\n") # sic. Literal "\n"'s rather than newline characters.
     q_champs_hash = {
-      year: row_data[0],
-      quartet_name: row_data[1],
-      score: row_data[2],
-      district: row_data[3],
-      comments: row_data[4],
-      members: row_data[5]
+      year: row_data[1],
+      quartet_name: row_data[2],
+      score: row_data[3],
+      district: row_data[4],
+      comments: row_data[5],
+      members: row_data[7],
+      place: 1 # champions definitionally are first place
     }
-    Performance.create(q_champs_hash)
+    Performance.create_champs(q_champs_hash)
 
   end
 end

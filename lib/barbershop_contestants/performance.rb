@@ -1,30 +1,32 @@
-# competitors have many competitions through performances and vice versa
+# competitors have many contests through performances and vice versa
 class Performance
-  attr_accessor :competiton, :competitor, :score, :place, :year
+  attr_accessor :contest, :competitor, :score, :place, :year
 
   @@all = []
 
-<<<<<<< HEAD
-  def initialize(data_hash)
-    self.year = data_hash[:year].to_i
-=======
   def initialize(arg_hash)
-    self.year = arg_hash[:year] if arg_hash[:year]
->>>>>>> eb8e33879e8e26fa16d144cf4f618d028e6f1624
+    self.year = arg_hash[:year]
+    self.score = arg_hash[:score]
+    self.place = arg_hash[:place]
+    # the following will generally be nil at this point
+    self.contest = arg_hash[:contest]
+    self.competitor = arg_hash[:competitor]
   end
 
   def save
     @@all << self
   end
 
-<<<<<<< HEAD
-  def self.create(args)
-    performance = self.new(args)
-=======
   def self.create(arg_hash)
-    performance = self.initialize(arg_hash)
->>>>>>> eb8e33879e8e26fa16d144cf4f618d028e6f1624
+    performance = self.new(arg_hash)
     performance.save
+    performance
+  end
+
+  def self.create_q_champs(q_champs_hash)
+    performance = self.create(q_champs_hash)
+    self.competitor = Quartet.find_or_create(q_champs_hash)
+    self.contest = Contest.find_or_create_(q_champs_hash)
     performance
   end
 
