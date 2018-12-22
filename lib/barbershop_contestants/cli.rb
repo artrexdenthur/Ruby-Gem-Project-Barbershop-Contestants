@@ -8,6 +8,8 @@ class CLI
 
   def self.start
     # welcome the user and show command list
+    # have the bin file call this method
+    # scrape data from here
     puts @@welcome_message
     self.request_command
     self.input_loop
