@@ -9,8 +9,10 @@ class CLI
   def self.start
     # welcome the user and show command list
     # have the bin file call this method
-    # scrape data from here
+    # scrape data from here, logic primarily in scraper
     puts @@welcome_message
+    Scraper.scrape_and_create_quartet_champs
+    # Scraper.scrape_and_create_chorus_champs
     self.request_command
     self.input_loop
   end
@@ -21,7 +23,7 @@ class CLI
 
   def self.request_command
     puts "Please enter a command."
-    puts "To see all entries in a contest, enter the type of contest (quartet or chorus) and the year (1939-2018 for quartets, 1953-present for choruses)"
+    puts "To see all entries in a contest, enter the type of contest (quartet or chorus) and the year (1939-2018 for quartets, 1953-2018 for choruses)"
     puts "To see all performances by a group, enter the name of the group"
     puts "To see a list of all champions for a contest type, enter 'quartet champions' or 'chorus champions'"
     puts "For other commands enter 'help'"
@@ -34,10 +36,13 @@ class CLI
     when commands[0].start_with?("quartet")
       case
       when commands[1].start_with?("champions")
+        puts "You've selected 'quartet champions'."
+      when commands.drop(1).any? { |c| (1939..2018).include? }
       end
     when commands[0].start_with?("chorus")
       case
       when commands[1].start_with?("champions")
+        puts "You've selected 'chorus champions'."
       end
     end
   end
