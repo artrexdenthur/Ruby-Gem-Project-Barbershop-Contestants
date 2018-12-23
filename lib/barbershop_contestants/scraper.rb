@@ -12,6 +12,7 @@ class Scraper
 
   def self.scrape_quartet_champs
     doc = scrape_HTML(QUARTET_CHAMPS_SITE) # scrape site
+    binding.pry
     doc = doc.css(".wikitable tbody tr") # get the champs table
     doc.delete(doc[0]) # get rid of the headers (can't figure out how to differentiate them with css)
     doc.each do |row|
