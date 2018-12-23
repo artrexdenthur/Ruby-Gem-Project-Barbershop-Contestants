@@ -12,3 +12,4 @@ require "barbershop_contestants"
 IRB.start(__FILE__)
 
 # hello from Sue
+# and hello from Dozuki
