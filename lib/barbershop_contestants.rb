@@ -7,8 +7,14 @@ module BarbershopContestants
   # Your code goes here
 end
 
+<<<<<<< HEAD
 # doc = Scraper.scrape_quartet_champs
 # doc.each_with_index do |row, index|
+=======
+doc = Scraper.scrape_quartet_champs
+# binding.pry
+# doc.each do |row|
+>>>>>>> ead516eaf0d53d65ac62ba7b7bc6a3e8d296e4d2
 #   # binding.pry
 #   row_data = row.text.split("\n")
 #   q_champs_hash = {
@@ -22,8 +28,13 @@ end
 #     type: "quartet"
 #   }
 #   Performance.create_q_champ(q_champs_hash)
+<<<<<<< HEAD
 #   # binding.pry
 #
+=======
+  # binding.pry
+
+>>>>>>> ead516eaf0d53d65ac62ba7b7bc6a3e8d296e4d2
 # end
 
 # binding.pry
