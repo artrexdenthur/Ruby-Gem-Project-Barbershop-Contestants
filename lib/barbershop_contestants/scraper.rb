@@ -36,12 +36,13 @@ class Scraper
   end
 
   def self.scrape_quartet_champs
-    doc = self.load_cache || self.scrape_or_load(LOCAL_SITES[:quartet_champs])
-    puts "Scraping local copy of site"
+    doc = self.load_cache || self.scrape_or_load(QUARTET_CHAMPS_SITE)
+    # puts "Scraping local copy of site"
     # TODO: reinstate real scraping functionality when in wifi
     # binding.pry
     doc = doc.css(".wikitable tbody tr") # get the champs table
     doc.delete(doc[0]) # get rid of the headers (can't figure out how to differentiate them with css)
+    doc
   end
 
   def self.scrape_and_create_quartet_champs

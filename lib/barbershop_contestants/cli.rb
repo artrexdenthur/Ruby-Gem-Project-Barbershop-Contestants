@@ -18,9 +18,10 @@ class CLI
   end
 
   def self.input_loop
+    # binding.pry
     while true
       puts "\nEnter a command:"
-      process_command(gets)
+      process_command(gets.chomp)
     end
   end
 
@@ -43,10 +44,10 @@ class CLI
     }
     # binding.pry
     command_verb = verbs.keys.find { |v| commands[0].start_with?(v) }
-    competitor = Competitor.all.find { |c| c.name.casecmp(command) }
+    competitor = Competitor.all.find { |c| c.name.downcase == command.downcase }
     if command_verb
       send(verbs[command_verb], commands.drop(1))
-    elsif
+    elsif competitor
       print_competitor(competitor)
     else
       no_command
@@ -68,26 +69,28 @@ class CLI
   end
 
   def self.quartet(args_arr)
-    if args_arr.drop(1).any? { |c| c.start_with?("cham") }
+    year = args_arr.find { |c| (1939..2018).include?(c.to_i) }
+    if args_arr.any? { |c| c.start_with?("cham") }
       puts "You've selected 'Quartet Champions'"
-    else # looking for a year
-      year = args_arr.drop(1).find { |c| (1939..2018).include?(c.to_i) }
-      if year
-        puts "You've selected 'Quartet Contest for' #{year}"
-      end
+    elsif year # looking for a year
+      puts "You've selected 'Quartet Contest for' #{year}"
+    else
+      no_command
     end
   end
 
   def self.chorus(args_arr)
-    if args_arr.drop(1).any? { |c| c.start_with?("cham") }
+    year = args_arr.find { |c| (1953..2018).include?(c.to_i) }
+    if args_arr.any? { |c| c.start_with?("cham") }
       puts "You've selected 'Chorus Champions'"
-    else # looking for a year
-      year = args_arr.drop(1).find { |c| (1939..2018).include?(c.to_i) }
-      if year
-        puts "You've selected 'Chorus Contest for #{year}'"
-      end
+    elsif year # looking for a year
+      puts "You've selected 'Chorus Contest for #{year}'"
+    else
+      no_command
     end
   end
+
+  #### Print methods
 
   def self.print_quartet_champs_by_year
     Performance.q_champs_by_year.each do |champ|
@@ -95,4 +98,7 @@ class CLI
     end
   end
 
+  def self.print_competitor(competitor)
+    puts competitor.name
+  end
 end
