@@ -18,9 +18,9 @@ class CLI
   end
 
   def self.input_loop
-    x = ""
-    while x.to_s != "quit"
-      x = process_command
+    while true
+      puts "\nEnter a command:"
+      process_command(gets)
     end
   end
 
@@ -35,67 +35,58 @@ class CLI
 
   def self.process_command(command)
     commands = command.downcase.split
-    verbs = ["quar", "chor", "help", "quit"]
-    command_verb = verbs.find { |v| commands[0].start_with?(v) }
-    if command_verb # verb used
-      # first check for the champion path
-      case command_verb
-      when "quit"
-        puts "Goodbye!"
-        return "quit"
-      when "help"
-        puts "You've selected 'help'"
-        puts "No extra commands have yet been added."
-        puts "Repeating command selection prompt:"
-        request_command
-      when "quar"
-        if commands.drop(1).any? { |c| c.start_with?("cham") }
-          puts "You've selected 'Quartet Champions'"
-        else # looking for a year
-          year = commands.drop(1).find { |c| (1939..2018).include?(c.to_i) }
-          if year
-            puts "You've selected 'Quartet Contest for' #{year}"
-          end
-        end
-      when "chor"
-        if commands.drop(1).any? { |c| c.start_with?("cham") }
-          puts "You've selected 'Chorus Champions'"
-        else # looking for a year
-          year = commands.drop(1).find { |c| (1939..2018).include?(c.to_i) }
-          if year
-            puts "You've selected 'Chorus Contest for #{year}'"
-          end
-        end
-    else # no verb used, try to search by name
-
+    verbs = {
+      "quar" => :quartet,
+      "chor" => :chorus,
+      "help" => :help,
+      "quit" => :quit
+    }
+    # binding.pry
+    command_verb = verbs.keys.find { |v| commands[0].start_with?(v) }
+    competitor = Competitor.all.find { |c| c.name.casecmp(command) }
+    if command_verb
+      send(verbs[command_verb], commands.drop(1))
+    elsif
+      print_competitor(competitor)
+    else
+      no_command
     end
-
-    # The following is the start of a "case parser" that may not be
-    # the actual easiest solution
-    # case
-    # when commands[0].start_with?("quartet")
-    #   case
-    #   when commands[1].start_with?("champions")
-    #     puts "You've selected 'quartet champions'."
-    #   when commands.drop(1).any? { |c| (1939..2018).include?(c) }
-    #     # do the year thing
-    #     year = commands.drop(1).find { |c| (1939..2018).include?(c) }
-    #     puts "You've selected"
-    #   end
-    # when commands[0].start_with?("chorus")
-    #   case
-    #   when commands[1].start_with?("champions")
-    #     puts "You've selected 'chorus champions'."
-    #   end
-    # when commands[0].start_with?("quit")
-    #   puts "Goodbye!"
-    #   return "quit"
-    # end
   end
 
-  def self.print_help
-    puts "This is the help function"
-    # TODO help function
+  def self.help(_ = nil)
+    request_command
+  end
+
+  def self.quit(_ = nil)
+    puts "Goodbye!"
+    IRB.start(__FILE__)
+    exit
+  end
+
+  def self.no_command
+    puts "Sorry, that command was not recognized"
+  end
+
+  def self.quartet(args_arr)
+    if args_arr.drop(1).any? { |c| c.start_with?("cham") }
+      puts "You've selected 'Quartet Champions'"
+    else # looking for a year
+      year = args_arr.drop(1).find { |c| (1939..2018).include?(c.to_i) }
+      if year
+        puts "You've selected 'Quartet Contest for' #{year}"
+      end
+    end
+  end
+
+  def self.chorus(args_arr)
+    if args_arr.drop(1).any? { |c| c.start_with?("cham") }
+      puts "You've selected 'Chorus Champions'"
+    else # looking for a year
+      year = args_arr.drop(1).find { |c| (1939..2018).include?(c.to_i) }
+      if year
+        puts "You've selected 'Chorus Contest for #{year}'"
+      end
+    end
   end
 
   def self.print_quartet_champs_by_year
