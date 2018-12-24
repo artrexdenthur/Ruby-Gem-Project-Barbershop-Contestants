@@ -50,31 +50,47 @@ class CLI
         request_command
       when "quar"
         if commands.drop(1).any? { |c| c.start_with?("cham") }
+          puts "You've selected 'Quartet Champions'"
+        else # looking for a year
+          year = commands.drop(1).find { |c| (1939..2018).include?(c.to_i) }
+          if year
+            puts "You've selected 'Quartet Contest for' #{year}"
+          end
+        end
+      when "chor"
+        if commands.drop(1).any? { |c| c.start_with?("cham") }
+          puts "You've selected 'Chorus Champions'"
+        else # looking for a year
+          year = commands.drop(1).find { |c| (1939..2018).include?(c.to_i) }
+          if year
+            puts "You've selected 'Chorus Contest for #{year}'"
+          end
+        end
     else # no verb used, try to search by name
 
     end
 
     # The following is the start of a "case parser" that may not be
     # the actual easiest solution
-    case
-    when commands[0].start_with?("quartet")
-      case
-      when commands[1].start_with?("champions")
-        puts "You've selected 'quartet champions'."
-      when commands.drop(1).any? { |c| (1939..2018).include?(c) }
-        # do the year thing
-        year = commands.drop(1).find { |c| (1939..2018).include?(c) }
-        puts "You've selected"
-      end
-    when commands[0].start_with?("chorus")
-      case
-      when commands[1].start_with?("champions")
-        puts "You've selected 'chorus champions'."
-      end
-    when commands[0].start_with?("quit")
-      puts "Goodbye!"
-      return "quit"
-    end
+    # case
+    # when commands[0].start_with?("quartet")
+    #   case
+    #   when commands[1].start_with?("champions")
+    #     puts "You've selected 'quartet champions'."
+    #   when commands.drop(1).any? { |c| (1939..2018).include?(c) }
+    #     # do the year thing
+    #     year = commands.drop(1).find { |c| (1939..2018).include?(c) }
+    #     puts "You've selected"
+    #   end
+    # when commands[0].start_with?("chorus")
+    #   case
+    #   when commands[1].start_with?("champions")
+    #     puts "You've selected 'chorus champions'."
+    #   end
+    # when commands[0].start_with?("quit")
+    #   puts "Goodbye!"
+    #   return "quit"
+    # end
   end
 
   def self.print_help
@@ -87,7 +103,5 @@ class CLI
       puts [champ.year, champ.competitor.name].join("\t")
     end
   end
-
-
 
 end
