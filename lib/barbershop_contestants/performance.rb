@@ -1,6 +1,6 @@
 # competitors have many contests through performances and vice versa
 class Performance
-  attr_accessor :contest, :competitor, :score, :place, :year, :number_on_stage
+  attr_accessor :contest, :competitor, :score, :place, :year, :number_on_stage, :director
 
   @@all = []
 
@@ -11,6 +11,8 @@ class Performance
     # the following will generally be nil at this point
     self.contest = arg_hash[:contest]
     self.competitor = arg_hash[:competitor]
+    self.number_on_stage = arg_hash[:number_on_stage]
+    self.director = arg_hash[:director]
   end
 
   def save
@@ -45,6 +47,10 @@ class Performance
     all.select { |p| p.place == 1 && p.contest.type = "quartet" }.sort_by { |p| p.year }
   end
 
+  def self.c_champs_by_year
+    all.select { |p| p.place == 1 && p.contest.type = "chorus" }.sort_by { |p| p.year }
+  end
+  
   def self.all
     @@all
   end

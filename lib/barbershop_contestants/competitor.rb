@@ -58,6 +58,10 @@ class Chorus < Competitor
     self.director = arg_hash[:director]
   end
 
+  def current_director
+    self.performances.max { |p| p.year.to_i }.director
+  end
+
   def format_hometown_and_district(hometown_and_district)
     # TODO: plug this logic in
   end

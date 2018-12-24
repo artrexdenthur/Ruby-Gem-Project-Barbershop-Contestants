@@ -84,8 +84,9 @@ class Scraper
         year: row_data[1],
         name: row_data[2],
         hometown_and_district: row_data[3],
-        number_on_stage: row_data[4],
-        score: row_data[5],
+        director: row_data[4],
+        number_on_stage: row_data[5],
+        score: row_data[6],
         place: 1, # champions definitionally are first place
         type: "chorus"
       }

@@ -108,7 +108,9 @@ class CLI
       print_performances_by_competitor(competitor)
     elsif competitor.type == 'chorus'
       puts "Type: #{competitor.type.capitalize}"
-      puts "need more chorus stuff"
+      puts "Director: #{competitor.current_director}"
+      puts "Hometown: #{competitor.hometown}"
+      print_performances_by_competitor(competitor)
     end
   end
 
@@ -121,7 +123,10 @@ class CLI
         puts "\t#{p.contest.year} International"
       end
       # contest, score, place
+      puts "\t\tDirector: #{p.director}"
       puts "\t\tScore: #{p.score}"
+      puts "\t\tPlace: #{p.place}"
+      puts "\t\tNumber on stage: #{p.number_on_stage}"
     end
   end
 end
