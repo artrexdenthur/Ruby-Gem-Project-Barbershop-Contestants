@@ -2,7 +2,7 @@
 # each has an m-to-m relationship with Contest::Quartet
 # and Contest::Chorus, respectively
 class Competitor
-  attr_accessor :performances, :district, :name
+  attr_accessor :performances, :district, :name, :type
 
   @@all = []
 
@@ -32,6 +32,7 @@ class Quartet < Competitor
 
   def initialize(arg_hash)
     self.name = arg_hash[:name]
+    self.type = 'quartet'
     self.district = arg_hash[:district]
     self.performances = (arg_hash[:performances] || [])
     self.comments = arg_hash[:comments]

@@ -99,6 +99,29 @@ class CLI
   end
 
   def self.print_competitor(competitor)
-    puts competitor.name
+    puts "Name: #{competitor.name}"
+    if competitor.type == 'quartet'
+      puts "Type: #{competitor.type.capitalize}"
+      puts "District: #{competitor.district}"
+      puts "Comments: #{competitor.comments}" if competitor.comments
+      puts "Members: #{competitor.members}"
+      print_performances_by_competitor(competitor)
+    elsif competitor.type == 'chorus'
+      puts "Type: #{competitor.type.capitalize}"
+      puts "need more chorus stuff"
+    end
+  end
+
+  def self.print_performances_by_competitor(competitor)
+    puts "Contests:"
+    competitor.performances.each do |p|
+      if p.contest.city
+        puts "\t#{p.contest.year} International at #{p.contest.city}"
+      else
+        puts "\t#{p.contest.year} International"
+      end
+      # contest, score, place
+      puts "\t\tScore: #{p.score}"
+    end
   end
 end
