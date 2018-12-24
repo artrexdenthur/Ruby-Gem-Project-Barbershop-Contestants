@@ -12,7 +12,7 @@ class CLI
     # scrape data from here, logic primarily in scraper
     puts @@welcome_message
     Scraper.scrape_and_create_quartet_champs
-    # Scraper.scrape_and_create_chorus_champs
+    Scraper.scrape_and_create_chorus_champs
     request_command
     input_loop
   end

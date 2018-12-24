@@ -48,4 +48,18 @@ end
 
 class Chorus < Competitor
 
+  attr_accessor :hometown, :director
+
+  def initialize(arg_hash)
+    self.name = arg_hash[:name]
+    self.type = 'chorus'
+    self.hometown = arg_hash[:hometown_and_district]
+    self.performances = (arg_hash[:performances] || [])
+    self.director = arg_hash[:director]
+  end
+
+  def format_hometown_and_district(hometown_and_district)
+    # TODO: plug this logic in
+  end
+
 end

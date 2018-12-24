@@ -2,6 +2,7 @@
 # the requested site
 class Scraper
   QUARTET_CHAMPS_SITE = "https://www.barbershopwiki.com/wiki/BHS_International_Quartet_Champions"
+  CHORUS_CHAMPS_SITE = "https://www.barbershopwiki.com/wiki/BHS_International_Chorus_Champions"
   LOCAL_SITES = {
     quartet_champs: "./sites/BHS International Quartet Champions - Barbershop Wiki Project.html",
     chorus_champs: "./sites/BHS International Chorus Champions - Barbershop Wiki Project.html",
@@ -14,7 +15,7 @@ class Scraper
   }
 
   def self.scrape_or_load(page)
-    self.load_cache || Nokogiri::HTML(open(page))
+    load_cache || Nokogiri::HTML(open(page))
   end
   # scraper should know what it's scraping,
   # but should not worry about the data classes'
@@ -36,17 +37,18 @@ class Scraper
   end
 
   def self.scrape_quartet_champs
-    doc = self.load_cache || self.scrape_or_load(QUARTET_CHAMPS_SITE)
+    puts "Scraping quartet champs"
+    doc = load_cache || scrape_or_load(QUARTET_CHAMPS_SITE)
     # puts "Scraping local copy of site"
     # TODO: reinstate real scraping functionality when in wifi
     # binding.pry
-    doc = doc.css(".wikitable tbody tr") # get the champs table
-    doc.delete(doc[0]) # get rid of the headers (can't figure out how to differentiate them with css)
-    doc
+    champ_table = doc.css(".wikitable tbody tr") # get the champs table
+    champ_table.shift # get rid of the headers (can't figure out how to differentiate them with css)
+    champ_table
   end
 
   def self.scrape_and_create_quartet_champs
-    self.scrape_quartet_champs.each do |row|
+    scrape_quartet_champs.each do |row|
       # binding.pry
       row_data = row.text.split("\n")
       q_champs_hash = {
@@ -59,15 +61,36 @@ class Scraper
         place: 1, # champions definitionally are first place
         type: "quartet"
       }
-      Performance.create_q_champ(q_champs_hash)
+      Performance.create_q_performance(q_champs_hash)
       # binding.pry
     end
   end
 
   def self.scrape_chorus_champs
-    doc = scrape_HTML(CHORUS_CHAMPS_SITE)
-    doc = doc.css(".wikitable tbody tr")
-    doc.delete(doc[0])
+    puts "Scraping chorus champs"
+    doc = scrape_or_load(CHORUS_CHAMPS_SITE)
+    champ_table = doc.css(".wikitable")[1].css("tr")
+    champ_table.shift # remove header line
+    champ_table
+  end
+
+  def self.scrape_and_create_chorus_champs
+    # binding.pry
+    scrape_chorus_champs.each do |row|
+      # build a hash
+      row_data = row.text.split("\n")
+      # binding.pry
+      c_champs_hash = {
+        year: row_data[1],
+        name: row_data[2],
+        hometown_and_district: row_data[3],
+        number_on_stage: row_data[4],
+        score: row_data[5],
+        place: 1, # champions definitionally are first place
+        type: "chorus"
+      }
+      Performance.create_c_performance(c_champs_hash)
+    end
   end
 
 end
