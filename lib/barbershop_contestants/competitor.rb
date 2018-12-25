@@ -44,6 +44,9 @@ class Quartet < Competitor
     # TODO: modify to pull out the members and put them in their own hashes
   end
 
+  def self.all
+    @@all.find_all { |c| c.type == "quartet" }
+  end
 end
 
 class Chorus < Competitor
@@ -59,11 +62,15 @@ class Chorus < Competitor
   end
 
   def current_director
-    self.performances.max { |p| p.year.to_i }.director
+    performances.max { |p| p.year.to_i }.director
   end
 
   def format_hometown_and_district(hometown_and_district)
     # TODO: plug this logic in
+  end
+
+  def self.all
+    @@all.find_all { |c| c.type == "chorus" }
   end
 
 end

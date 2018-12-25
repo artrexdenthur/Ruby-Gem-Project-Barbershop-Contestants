@@ -71,7 +71,12 @@ class CLI
   def self.quartet(args_arr)
     year = args_arr.find { |c| (1939..2018).include?(c.to_i) }
     if args_arr.any? { |c| c.start_with?("cham") }
-      puts "You've selected 'Quartet Champions'"
+      binding.pry
+      Performance.all.find_all do |p|
+        p.place == 1 && p.competitor.type == "quartet"
+      end.sort_by { |p| p.year }.each do |p|
+        puts "Year: #{p.year}\tName: #{p.competitor.name}\tScore: #{p.score}"
+      end
     elsif year # looking for a year
       puts "You've selected 'Quartet Contest for' #{year}"
     else
@@ -82,7 +87,11 @@ class CLI
   def self.chorus(args_arr)
     year = args_arr.find { |c| (1953..2018).include?(c.to_i) }
     if args_arr.any? { |c| c.start_with?("cham") }
-      puts "You've selected 'Chorus Champions'"
+      Performance.all.find_all do |p|
+        p.place == 1 && p.competitor.type == "chorus"
+      end.sort_by { |p| p.year }.each do |p|
+        puts "Year: #{p.year}\tName: #{p.competitor.name}\tScore: #{p.score}"
+      end
     elsif year # looking for a year
       puts "You've selected 'Chorus Contest for #{year}'"
     else
