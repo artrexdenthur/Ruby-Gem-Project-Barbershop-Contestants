@@ -43,14 +43,10 @@ class Performance
     performance
   end
 
-  def self.q_champs_by_year
-    all.select { |p| p.place == 1 && p.contest.type = "quartet" }.sort_by { |p| p.year }
+  def self.champs_type_by_year(type)
+    all.select { |p| p.place == 1 && p.contest.type = type }.sort_by { |p| p.year }
   end
 
-  def self.c_champs_by_year
-    all.select { |p| p.place == 1 && p.contest.type = "chorus" }.sort_by { |p| p.year }
-  end
-  
   def self.all
     @@all
   end
