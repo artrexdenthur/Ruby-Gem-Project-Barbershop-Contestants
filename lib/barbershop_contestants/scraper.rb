@@ -1,6 +1,37 @@
 # simple (reusable) scraper class that calls Nokogiri and dumps
 # the requested site
 class Scraper
+  # site storage
+  LOCATIONS = {
+    base:  {
+      web: "https://www.barbershopwiki.com/wiki/",
+      local: "./sites/"
+    },
+    q_champs: {
+      web: "BHS_International_Quartet_Champions",
+      local: "BHS International Quartet Champions - Barbershop Wiki Project.html",
+    },
+    c_champs: {
+      web: "BHS_International_Chorus_Champions",
+      local: "BHS International Chorus Champions - Barbershop Wiki Project.html"
+    },
+    q_year: {
+      web: "",
+      local:""
+    },
+    c_year: {
+      web: "",
+      local: ""
+    },
+    q_page: {
+      web: "",
+      local: ""
+    },
+    c_page: {
+      web: "",
+      local: ""
+    },
+  }
   QUARTET_CHAMPS_SITE = "https://www.barbershopwiki.com/wiki/BHS_International_Quartet_Champions"
   CHORUS_CHAMPS_SITE = "https://www.barbershopwiki.com/wiki/BHS_International_Chorus_Champions"
   LOCAL_SITES = {
@@ -21,6 +52,10 @@ class Scraper
   # but should not worry about the data classes'
   # architecture
 
+  def get_contest_year_site(year, contest_type = 'quartet', scrape_location = 'web')
+    case scrape_location
+    when 'web'
+      "https://www.barbershopwiki.com"
   def self.load_cache
     # loaded = {}
     # CACHE_LOCATIONS.each do |key, loc|

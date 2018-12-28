@@ -99,11 +99,11 @@ class CLI
     end
   end
 
-  #### Print methods
 
-  def self.print_quartet_champs_by_year
-    Performance.q_champs_by_year.each do |champ|
-      puts [champ.year, champ.competitor.name].join("\t")
+  def self.print_champ_type_by_year(type)
+    table = Terminal::Table.new header: ["year", type, "score"]
+    Performance.champs_type_by_year(type).each do |p|
+      table.add_row [p.year, p.competitor.name, p.score]
     end
   end
 
