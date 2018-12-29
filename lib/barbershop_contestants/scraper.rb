@@ -17,11 +17,11 @@ class Scraper
     },
     q_year: {
       web: "",
-      local:""
+      local: ["BHS Intl Quartet Contest ", " - Barbershop Wiki Project.html"]
     },
     c_year: {
       web: "",
-      local: ""
+      local: ["BHS Intl Chorus Contest ", " - Barbershop Wiki Project.html"]
     },
     q_page: {
       web: "",
@@ -52,10 +52,13 @@ class Scraper
   # but should not worry about the data classes'
   # architecture
 
-  def get_contest_year_site(year, contest_type = 'quartet', scrape_location = 'web')
-    case scrape_location
-    when 'web'
-      "https://www.barbershopwiki.com"
+  # def get_contest_year_site(year, contest_type = 'quartet', scrape_location = 'web')
+  #   case scrape_location
+  #   when 'web'
+  #     "https://www.barbershopwiki.com"
+  #   end
+  # end
+
   def self.load_cache
     # loaded = {}
     # CACHE_LOCATIONS.each do |key, loc|
@@ -71,9 +74,11 @@ class Scraper
     ##### node.to_s / .to_html / .to_xml
   end
 
-  def self.scrape_quartet_champs
+  def self.scrape_quartet_champs(source)
+    # binding.pry
     puts "Scraping quartet champs"
-    doc = load_cache || scrape_or_load(QUARTET_CHAMPS_SITE)
+    location = LOCATIONS[:base][source] + LOCATIONS[:q_champs][source]
+    doc = load_cache || scrape_or_load(location)
     # puts "Scraping local copy of site"
     # TODO: reinstate real scraping functionality when in wifi
     # binding.pry
@@ -82,8 +87,8 @@ class Scraper
     champ_table
   end
 
-  def self.scrape_and_create_quartet_champs
-    scrape_quartet_champs.each do |row|
+  def self.scrape_and_create_quartet_champs(source)
+    scrape_quartet_champs(source).each do |row|
       # binding.pry
       row_data = row.text.split("\n")
       q_champs_hash = {
@@ -101,17 +106,18 @@ class Scraper
     end
   end
 
-  def self.scrape_chorus_champs
+  def self.scrape_chorus_champs(source)
     puts "Scraping chorus champs"
-    doc = scrape_or_load(CHORUS_CHAMPS_SITE)
+    location = LOCATIONS[:base][source] + LOCATIONS[:c_champs][source]
+    doc = load_cache || scrape_or_load(location)
     champ_table = doc.css(".wikitable")[1].css("tr")
     champ_table.shift # remove header line
     champ_table
   end
 
-  def self.scrape_and_create_chorus_champs
+  def self.scrape_and_create_chorus_champs(source)
     # binding.pry
-    scrape_chorus_champs.each do |row|
+    scrape_chorus_champs(source).each do |row|
       # build a hash
       row_data = row.text.split("\n")
       # binding.pry
@@ -129,4 +135,34 @@ class Scraper
     end
   end
 
+  def self.scrape_quartet_year(source, year)
+    puts "Scraping quartet contest for #{year}"
+    location = LOCATIONS[:base][source] + LOCATIONS[:q_year][source].join(year.to_s)
+    doc = load_cache || scrape_or_load(location)
+    tables_node = doc.css(".wikitable")
+    tables = []
+    tables_node.each do |t|
+      t.css("tr").shift  # remove headers
+      tables << t
+    end
+    tables
+    # binding.pry
+  end
+
+  def self.scrape_and_create_quartet_year(source, year)
+    # binding.pry
+    scrape_quartet_year(source, year).each do |t|
+      binding.pry
+      t.each do |t|
+        t.each do |row|
+          row_data = row.text.split("\n")
+          binding.pry
+          q_year_hash = {
+
+          }
+        end
+      end
+    end
+    # etc
+  end
 end

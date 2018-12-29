@@ -11,10 +11,23 @@ class CLI
     # have the bin file call this method
     # scrape data from here, logic primarily in scraper
     puts @@welcome_message
-    Scraper.scrape_and_create_quartet_champs
-    Scraper.scrape_and_create_chorus_champs
+    source = get_source
+    Scraper.scrape_and_create_quartet_champs(source)
+    Scraper.scrape_and_create_chorus_champs(source)
+    Scraper.scrape_and_create_quartet_year(source, 2018)
     request_command
     input_loop
+  end
+
+  def self.get_source
+    # return :web # TODO uncomment for final version
+    while true
+      puts "Enter web or local:"
+      source = gets.chomp.downcase
+      if ["web","local"].include?(source)
+        return source.to_sym
+      end
+    end
   end
 
   def self.input_loop

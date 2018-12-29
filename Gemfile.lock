@@ -4,6 +4,7 @@ PATH
     barbershop_contestants (0.2.0)
       nokogiri (~> 1.8.5)
       require_all (~> 2.0.0)
+      terminal-table (~> 1.8.0)
 
 GEM
   remote: https://rubygems.org/
@@ -38,8 +39,6 @@ GEM
     multipart-post (2.0.0)
     nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
-    nokogiri (1.8.5-x64-mingw32)
-      mini_portile2 (~> 2.3.0)
     octokit (4.13.0)
       sawyer (~> 0.8.0, >= 0.5.3)
     pry (0.12.2)
@@ -53,9 +52,12 @@ GEM
     sawyer (0.8.1)
       addressable (>= 2.3.5, < 2.6)
       faraday (~> 0.8, < 1.0)
+    terminal-table (1.8.0)
+      unicode-display_width (~> 1.1, >= 1.1.1)
     thread_safe (0.3.6)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
+    unicode-display_width (1.4.1)
 
 PLATFORMS
   ruby
