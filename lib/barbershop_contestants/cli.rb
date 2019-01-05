@@ -85,14 +85,14 @@ class CLI
   def self.quartet(args_arr)
     year = args_arr.find { |c| (1939..2018).include?(c.to_i) }
     if args_arr.any? { |c| c.start_with?("cham") }
-      binding.pry
+      # binding.pry
       Performance.all.find_all do |p|
         p.place == 1 && p.competitor.type == "quartet"
       end.sort_by { |p| p.year }.each do |p|
         puts "Year: #{p.year}\tName: #{p.competitor.name}\tScore: #{p.score}"
       end
     elsif year # looking for a year
-      puts "You've selected 'Quartet Contest for' #{year}"
+      puts "You've selected 'Quartet Contest for #{year}''"
     else
       no_command
     end
@@ -139,6 +139,7 @@ class CLI
 
   def self.print_performances_by_competitor(competitor)
     puts "Contests:"
+    chorus = (competitor.type == 'chorus')
     competitor.performances.each do |p|
       if p.contest.city
         puts "\t#{p.contest.year} International at #{p.contest.city}"
@@ -146,10 +147,10 @@ class CLI
         puts "\t#{p.contest.year} International"
       end
       # contest, score, place
-      puts "\t\tDirector: #{p.director}"
+      puts "\t\tDirector: #{p.director}" if chorus
       puts "\t\tScore: #{p.score}"
       puts "\t\tPlace: #{p.place}"
-      puts "\t\tNumber on stage: #{p.number_on_stage}"
+      puts "\t\tNumber on stage: #{p.number_on_stage}" if chorus && p.number_on_stage.to_i > 0
     end
   end
 end
