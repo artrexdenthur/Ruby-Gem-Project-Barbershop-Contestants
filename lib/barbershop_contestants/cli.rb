@@ -4,35 +4,33 @@
 class CLI
   # Contest::Quartets.scrape_contests
 
-  @@welcome_message = "Welcome to the Barbershop Contestants CLI!"
+  @welcome_message = "Welcome to the Barbershop Contestants CLI!"
 
   def self.start
     # welcome the user and show command list
     # have the bin file call this method
     # scrape data from here, logic primarily in scraper
-    puts @@welcome_message
-    source = get_source
-    Scraper.scrape_and_create_quartet_champs(source)
-    Scraper.scrape_and_create_chorus_champs(source)
-    Scraper.scrape_and_create_quartet_year(source, 2018)
+    puts @welcome_message
+    @source = choose_source
+    Scraper.scrape_and_create_quartet_champs(@source)
+    Scraper.scrape_and_create_chorus_champs(@source)
+    Scraper.scrape_and_create_quartet_year(@source, 2018)
     request_command
     input_loop
   end
 
-  def self.get_source
+  def self.choose_source
     # return :web # TODO uncomment for final version
-    while true
+    loop do
       puts "Enter web or local:"
-      source = gets.chomp.downcase
-      if ["web","local"].include?(source)
-        return source.to_sym
-      end
+      entry = gets.chomp
+      return entry.to_sym if %w[web local].include?(entry)
     end
   end
 
   def self.input_loop
     # binding.pry
-    while true
+    loop do
       puts "\nEnter a command:"
       process_command(gets.chomp)
     end
@@ -40,9 +38,12 @@ class CLI
 
   def self.request_command
     puts "Please enter a command."
-    puts "To see all entries in a contest, enter the type of contest (quartet or chorus) and the year (1939-2018 for quartets, 1953-2018 for choruses)"
+    puts "To see all entries in a contest, enter the type of contest " \
+          "(quartet or chorus) and the year (1939-2018 for quartets, " \
+          "1953-2018 for choruses)"
     puts "To see all performances by a group, enter the name of the group"
-    puts "To see a list of all champions for a contest type, enter 'quartet champions' or 'chorus champions'"
+    puts "To see a list of all champions for a contest type, enter " \
+        "'quartet champions' or 'chorus champions'"
     puts "To quit, enter 'quit'"
     # puts "For more information enter 'help'"
   end
@@ -92,7 +93,16 @@ class CLI
         puts "Year: #{p.year}\tName: #{p.competitor.name}\tScore: #{p.score}"
       end
     elsif year # looking for a year
-      puts "You've selected 'Quartet Contest for #{year}''"
+      puts "Scraping Quartet Competition for #{year}"
+      Scraper.scrape_and_create_quartet_year(@source, year)
+      Performance.all.find_all do |p|
+        p.year == year && p.competitor.type == "quartet"
+      end.sort_by { |p| p.place.to_i }.each do |p|
+        puts "Place: #{p.place}\t" \
+              "Name: #{p.competitor.name}\t" \
+              "District: #{p.competitor.district}\t" \
+              "Score: #{p.score}\t"
+      end
     else
       no_command
     end
