@@ -142,8 +142,7 @@ class Scraper
     tables_node = doc.css(".wikitable")
     tables = []
     tables_node.each do |t|
-      t.css("tr").shift  # remove headers
-      tables << t
+      tables << t.css("tr").drop(1)  # remove headers
     end
     tables
     # binding.pry
@@ -152,15 +151,18 @@ class Scraper
   def self.scrape_and_create_quartet_year(source, year)
     # binding.pry
     scrape_quartet_year(source, year).each do |t|
-      binding.pry
-      t.each do |t|
-        t.each do |row|
-          row_data = row.text.split("\n")
-          binding.pry
-          q_year_hash = {
-
+      # binding.pry
+      t.each do |tr|
+        row_data = tr.text.split("\n")
+        # binding.pry
+        q_year_hash = {
+          year: year,
+          place: row_data[1],
+          name: row_data[2],
+          district: row_data[3],
+          score: row_data[4]
           }
-        end
+        Performance.create_q_performance(q_year_hash)
       end
     end
     # etc
