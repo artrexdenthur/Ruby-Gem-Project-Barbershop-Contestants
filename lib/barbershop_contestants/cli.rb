@@ -48,6 +48,7 @@ class CLI
   end
 
   def self.process_command(command)
+    system "clear" or system "cls"
     commands = command.downcase.split
     verbs = {
       "quar" => :quartet,
