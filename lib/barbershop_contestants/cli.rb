@@ -6,6 +6,18 @@ class CLI
 
   @welcome_message = "Welcome to the Barbershop Contestants CLI!"
 
+  @command_verb_hash = {
+    "quar" => [:display, "quartet"],
+    "chor" => [:display, "chorus"],
+    "help" => [:help, ""],
+    "quit" => [:quit, ""]
+  }
+
+  @type_years_hash = {
+    "quartet" => (1939..2018),
+    "chorus" => (1953..2018)
+  }
+
   def self.start
     # welcome the user and show command list
     # have the bin file call this method
@@ -56,8 +68,9 @@ class CLI
     # full "quartet" and "chorus" parsing is in other methods.
     system "clear" or system "cls"
     commands = command.downcase.split
-    command_verb(commands) || show_competitor(commands) || no_command
-    verbs = {
+    # TODO: uncomment next line when new command system is ready
+    # parse_command_verb(commands) || show_competitor(commands) || no_command
+    command_verb_hash = {
       "quar" => :quartet,
       "chor" => :chorus,
       "help" => :help,
@@ -66,10 +79,10 @@ class CLI
     # binding.pry
     # TODO: refactor to include a verb parsing method and a
     # competitor finding method
-    command_verb = verbs.keys.find { |v| commands[0].start_with?(v) }
+    command_verb = command_verb_hash.keys.find { |v| commands[0].start_with?(v) }
     competitor = Competitor.all.find { |c| c.name.downcase == command.downcase }
     if command_verb
-      send(verbs[command_verb], commands.drop(1))
+      send(command_verb_hash[command_verb], commands.drop(1))
     elsif competitor
       print_competitor(competitor)
     else
@@ -77,11 +90,36 @@ class CLI
     end
   end
 
-  def self.help(_ = nil)
+  def self.parse_command_verb(commands)
+    verb = @command_verb_hash.keys.find { |v| commands[0].start_with?(v) }
+    verb ? send(verb[0], verb[1], commands.drop(1)) : false
+  end
+
+  def self.display(type, commands)
+    # type contains competitor type string (chorus or quartet)
+    # commands contains remainder of user input as string array
+    if commands.any? { |c| c.start_with?("cham") } # check for champs command
+      display_champs(type)
+    elsif (year = commands.find { |c| type_years_hash[type].contains? c.to_i }.to_i)
+      display_year(year, type)
+    else
+      false
+    end
+  end
+
+  def self.display_champs(type)
+    champs_arr = Peformance.filter_all(place: 1, type: type)
+  end
+
+  def self.display_year(year, type)
+
+  end
+
+  def self.help(*_)
     request_command
   end
 
-  def self.quit(_ = nil)
+  def self.quit(*_)
     puts "Goodbye!"
     IRB.start(__FILE__)
     exit
@@ -92,7 +130,7 @@ class CLI
     request_command
   end
 
-  def self.quartet(args_arr)
+  def self.quartet(args_arr) # deprecated to display command
     year = args_arr.find { |c| (1939..2018).include?(c.to_i) }
     if args_arr.any? { |c| c.start_with?("cham") }
       # binding.pry

@@ -45,6 +45,8 @@ class Scraper
     cchamps: "./sites/cchamps.txt"
   }
 
+  @years_scraped = []
+
   def self.scrape_or_load(page)
     load_cache || Nokogiri::HTML(open(page))
   end
@@ -149,6 +151,11 @@ class Scraper
   # end
 
   def self.scrape_and_create_year(source, year, type)
+    if years_scraped.include?(year)
+      puts "#{year} already scraped"
+      return true
+    end
+    years_scraped << year
     scrape_year(source, year, type).each do |t|
       # binding.pry
       t.each do |tr|
@@ -160,7 +167,7 @@ class Scraper
           name: row_data[2],
           district: row_data[3],
           score: row_data[4]
-          }
+        }
         Performance.create_performance(year_hash, type)
       end
     end
