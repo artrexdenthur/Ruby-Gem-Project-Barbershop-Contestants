@@ -16,11 +16,11 @@ class Scraper
       local: "BHS International Chorus Champions - Barbershop Wiki Project.html"
     },
     q_year: {
-      web: "",
+      web: ["BHS_Intl_Quartet_Contest_", ""],
       local: ["BHS Intl Quartet Contest ", " - Barbershop Wiki Project.html"]
     },
     c_year: {
-      web: "",
+      web: ["BHS_Intl_Chorus_Contest_", ""],
       local: ["BHS Intl Chorus Contest ", " - Barbershop Wiki Project.html"]
     },
     q_page: {
