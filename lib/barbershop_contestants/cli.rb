@@ -14,18 +14,21 @@ class CLI
     @source = choose_source
     Scraper.scrape_and_create_quartet_champs(@source)
     Scraper.scrape_and_create_chorus_champs(@source)
-    Scraper.scrape_and_create_quartet_year(@source, 2018)
+    Scraper.scrape_and_create_year(@source, 2018, "quartet") # remove in final
+    Scraper.scrape_and_create_year(@source, 2018, "chorus") # remove in final
     request_command
     input_loop
   end
 
   def self.choose_source
-    # return :web # TODO uncomment for final version
-    loop do
-      puts "Enter web or local:"
-      entry = gets.chomp
-      return entry.to_sym if %w[web local].include?(entry)
-    end
+    return :web
+    # loop do
+      # puts "Enter web or local:"
+      # entry = gets.chomp
+      # return entry.to_sym if %w[web local].include?(entry)
+    # end
+    ### Reverse the comments in this method to be offered a choice at launch
+    ### between web scraping and local scraping.
   end
 
   def self.input_loop
@@ -53,6 +56,7 @@ class CLI
     # full "quartet" and "chorus" parsing is in other methods.
     system "clear" or system "cls"
     commands = command.downcase.split
+    command_verb(commands) || show_competitor(commands) || no_command
     verbs = {
       "quar" => :quartet,
       "chor" => :chorus,

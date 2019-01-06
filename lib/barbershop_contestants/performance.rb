@@ -43,6 +43,17 @@ class Performance
     performance
   end
 
+  def self.create_performance(arg_hash, type)
+    performance = create(arg_hash)
+    performance.competitor = \
+      (type == "chorus" ? Chorus : Quartet).send :find_or_create, arg_hash
+    performance.competitor.performances << performance
+    performance.contest = Contest.find_or_create(arg_hash)
+    performance.contest.performances << performance
+    performance
+  end
+
+
   def self.champs_type_by_year(type)
     all.select { |p| p.place == 1 && p.contest.type = type }.sort_by { |p| p.year }
   end

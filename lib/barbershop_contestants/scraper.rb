@@ -76,7 +76,7 @@ class Scraper
 
   def self.scrape_quartet_champs(source)
     # binding.pry
-    puts "Scraping quartet champs"
+    puts "Scraping Quartet Champs"
     location = LOCATIONS[:base][source] + LOCATIONS[:q_champs][source]
     doc = load_cache || scrape_or_load(location)
     # puts "Scraping local copy of site"
@@ -101,13 +101,13 @@ class Scraper
         place: 1, # champions definitionally are first place
         type: "quartet"
       }
-      Performance.create_q_performance(q_champs_hash)
+      Performance.create_performance(q_champs_hash, "quartet")
       # binding.pry
     end
   end
 
   def self.scrape_chorus_champs(source)
-    puts "Scraping chorus champs"
+    puts "Scraping Chorus Champs"
     location = LOCATIONS[:base][source] + LOCATIONS[:c_champs][source]
     doc = load_cache || scrape_or_load(location)
     champ_table = doc.css(".wikitable")[1].css("tr")
@@ -135,36 +135,83 @@ class Scraper
     end
   end
 
-  def self.scrape_quartet_year(source, year)
-    puts "Scraping quartet contest for #{year}"
-    location = LOCATIONS[:base][source] + LOCATIONS[:q_year][source].join(year.to_s)
-    doc = load_cache || scrape_or_load(location)
-    tables_node = doc.css(".wikitable")
-    tables = []
-    tables_node.each do |t|
-      tables << t.css("tr").drop(1)  # remove headers
-    end
-    tables
-    # binding.pry
-  end
+  # def self.scrape_quartet_year(source, year)
+  #   puts "Scraping Quartet Contest for #{year}"
+  #   location = LOCATIONS[:base][source] + LOCATIONS[:q_year][source].join(year.to_s)
+  #   doc = load_cache || scrape_or_load(location)
+  #   tables_node = doc.css(".wikitable")
+  #   tables = []
+  #   tables_node.each do |t|
+  #     tables << t.css("tr").drop(1)  # remove headers
+  #   end
+  #   tables
+  #   # binding.pry
+  # end
 
-  def self.scrape_and_create_quartet_year(source, year)
-    # binding.pry
-    scrape_quartet_year(source, year).each do |t|
+  def self.scrape_and_create_year(source, year, type)
+    scrape_year(source, year, type).each do |t|
       # binding.pry
       t.each do |tr|
         row_data = tr.text.split("\n")
         # binding.pry
-        q_year_hash = {
+        year_hash = {
           year: year,
           place: row_data[1],
           name: row_data[2],
           district: row_data[3],
           score: row_data[4]
           }
-        Performance.create_q_performance(q_year_hash)
+        Performance.create_performance(year_hash, type)
       end
     end
-    # etc
   end
+
+  def self.scrape_year(source, year, type)
+    puts "Scraping #{type.capitalize} Contest for #{year}"
+    location = LOCATIONS[:base][source] + \
+               LOCATIONS[(type[0] + "_year").to_sym][source].join(year.to_s)
+    doc = load_cache || scrape_or_load(location)
+    tables_node = doc.css(".wikitable")
+    tables_node.map { |t| t.css("tr").drop(1) }
+    # binding.pry
+  end
+
+  # def self.scrape_and_create_quartet_year(source, year)
+  #   # binding.pry
+  #   scrape_quartet_year(source, year).each do |t|
+  #     # binding.pry
+  #     t.each do |tr|
+  #       row_data = tr.text.split("\n")
+  #       # binding.pry
+  #       q_year_hash = {
+  #         year: year,
+  #         place: row_data[1],
+  #         name: row_data[2],
+  #         district: row_data[3],
+  #         score: row_data[4]
+  #         }
+  #       Performance.create_q_performance(q_year_hash)
+  #     end
+  #   end
+  #   # etc
+  # end
+  #
+  # def self.scrape_chorus_year(source, year)
+  #   puts "Scraping Chorus Contest for #{year}"
+  #   location = LOCATIONS[:base][source] + LOCATIONS[:c_year][source].join(year.to_s)
+  #   doc = load_cache || scrape_or_load(location)
+  #   tables_node = doc.css(".wikitable")
+  #   tables = []
+  #   tables_node.each do |t|
+  #     tables << t.css("tr").drop(1)  # remove headers
+  #   end
+  #   tables
+  #   binding.pry
+  # end
+  #
+  # def self.scrape_and_create_chorus_year(source, year)
+  #   scrape_chorus_year(source, year).each do
+  #
+  #   end
+  # end
 end
