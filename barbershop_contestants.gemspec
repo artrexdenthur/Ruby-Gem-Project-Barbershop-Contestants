@@ -43,6 +43,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "nokogiri", "~> 1.8.5"
   spec.add_runtime_dependency "require_all", "~> 2.0.0"
-  spec.add_runtime_dependency "terminal-table", "~> 1.8.0"
+  spec.add_runtime_dependency "tty-table", "~> 0.10.0"
+
 
 end

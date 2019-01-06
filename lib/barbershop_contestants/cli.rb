@@ -45,10 +45,12 @@ class CLI
     puts "To see a list of all champions for a contest type, enter " \
         "'quartet champions' or 'chorus champions'"
     puts "To quit, enter 'quit'"
-    # puts "For more information enter 'help'"
+    puts "To see this info again, enter 'help'"
   end
 
   def self.process_command(command)
+    # parses the given input between command types.
+    # full "quartet" and "chorus" parsing is in other methods.
     system "clear" or system "cls"
     commands = command.downcase.split
     verbs = {
@@ -58,6 +60,8 @@ class CLI
       "quit" => :quit
     }
     # binding.pry
+    # TODO: refactor to include a verb parsing method and a
+    # competitor finding method
     command_verb = verbs.keys.find { |v| commands[0].start_with?(v) }
     competitor = Competitor.all.find { |c| c.name.downcase == command.downcase }
     if command_verb
@@ -80,16 +84,18 @@ class CLI
   end
 
   def self.no_command
-    puts "Sorry, that command was not recognized"
+    puts "Sorry, that command was not recognized\n"
+    request_command
   end
 
   def self.quartet(args_arr)
     year = args_arr.find { |c| (1939..2018).include?(c.to_i) }
     if args_arr.any? { |c| c.start_with?("cham") }
       # binding.pry
-      Performance.all.find_all do |p|
-        p.place == 1 && p.competitor.type == "quartet"
-      end.sort_by { |p| p.year }.each do |p|
+      # Performance.all.find_all do |p|
+      #   p.place == 1 && p.competitor.type == "quartet"
+      # end.sort_by { |p| p.year }.each do |p|
+      Performance.filter_all(year: year, place: 1, type: "quartet").each do |p|
         puts "Year: #{p.year}\tName: #{p.competitor.name}\tScore: #{p.score}"
       end
     elsif year # looking for a year
@@ -108,7 +114,7 @@ class CLI
     end
   end
 
-  def self.chorus(args_arr)
+  def self.chorus(args_arr) # branches a 'chorus' verb
     year = args_arr.find { |c| (1953..2018).include?(c.to_i) }
     if args_arr.any? { |c| c.start_with?("cham") }
       Performance.all.find_all do |p|
@@ -123,6 +129,13 @@ class CLI
     end
   end
 
+  def self.print_chorus_year_table(year)
+    title = "International Chorus Competition #{year}"
+    headers = ["Place", "Chorus", "District", "Score"]
+    Performance.all.find_all do |p|
+      p.year == year
+    end
+  end
 
   def self.print_champ_type_by_year(type)
     table = Terminal::Table.new header: ["year", type, "score"]

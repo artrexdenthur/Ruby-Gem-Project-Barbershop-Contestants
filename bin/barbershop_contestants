@@ -4,7 +4,7 @@ require "bundler/setup"
 require "nokogiri"
 require "open-uri"
 require "require_all"
-require "terminal-table"
+require "tty-table"
 
 require "pry"
 require "irb"
