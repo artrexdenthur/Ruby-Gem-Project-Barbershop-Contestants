@@ -1,4 +1,4 @@
-require_all "./lib"
+require_rel "../lib"
 
 # QUARTET_CHAMPS_SITE = "https://www.barbershopwiki.com/wiki/BHS_International_Quartet_Champions"
 
