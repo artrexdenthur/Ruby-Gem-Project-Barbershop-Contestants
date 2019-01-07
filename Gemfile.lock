@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    barbershop_contestants (0.2.0)
+    barbershop_contestants (0.3.0)
       nokogiri (~> 1.8.5)
       require_all (~> 2.0.0)
       tty-table (~> 0.10.0)
@@ -39,6 +39,8 @@ GEM
     multi_json (1.13.1)
     multipart-post (2.0.0)
     necromancer (0.4.0)
+    nokogiri (1.8.5)
+      mini_portile2 (~> 2.3.0)
     nokogiri (1.8.5-x64-mingw32)
       mini_portile2 (~> 2.3.0)
     octokit (4.13.0)

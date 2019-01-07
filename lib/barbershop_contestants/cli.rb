@@ -28,8 +28,8 @@ class CLI
     @source = choose_source
     Scraper.scrape_and_create_quartet_champs(@source)
     Scraper.scrape_and_create_chorus_champs(@source)
-    Scraper.scrape_and_create_year(@source, 2018, "quartet") # remove in final
-    Scraper.scrape_and_create_year(@source, 2018, "chorus") # remove in final
+    # Scraper.scrape_and_create_year(@source, 2018, "quartet") # remove in final
+    # Scraper.scrape_and_create_year(@source, 2018, "chorus") # remove in final
     request_command
     input_loop
   end
