@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    barbershop_contestants (0.3.4)
+    barbershop_contestants (0.3.5)
       nokogiri (~> 1.8.5)
       require_all (~> 2.0.0)
       tty-table (~> 0.10.0)
