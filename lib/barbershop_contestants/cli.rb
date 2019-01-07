@@ -108,6 +108,7 @@ class CLI
       disp_arr = []
       disp_arr.push(p.year, p.competitor.name, p.competitor.district, p.score)
     end
+    print_tty_table(title: title, headers: headers, rows: rows)
     true
   end
 
@@ -183,8 +184,9 @@ class CLI
     title = "Performances"
     headers = ["Year", "Place", "Score"]
     headers << "# On Stage" if com.type == "chorus"
-    com.performances.sort { |p| p.year }
-    rows = com.performances.map do |p|
+    perf_arr = com.performances.sort_by { |p| p.year }.reverse
+    # binding.pry
+    rows = perf_arr.map do |p|
       disp_arr = []
       disp_arr.push(p.number_on_stage) if com.type == "chorus"
       disp_arr.unshift(p.year, p.place, p.score)
