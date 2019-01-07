@@ -45,7 +45,7 @@ class Scraper
     cchamps: "./sites/cchamps.txt"
   }
 
-  @years_scraped = []
+  @years_scraped = { "quartet" => [], "chorus" => [] }
 
   def self.scrape_or_load(page)
     load_cache || Nokogiri::HTML(open(page))
@@ -151,11 +151,11 @@ class Scraper
   # end
 
   def self.scrape_and_create_year(source, year, type)
-    if years_scraped.include?(year)
+    if @years_scraped[type].include?(year)
       puts "#{year} already scraped"
       return true
     end
-    years_scraped << year
+    @years_scraped[type] << year
     scrape_year(source, year, type).each do |t|
       # binding.pry
       t.each do |tr|

@@ -60,8 +60,8 @@ class Performance
 
   def self.filter_all(place: nil, year: nil, type: nil, comp_name: nil)
     filter = self.all
-    place && filter = filter.select { |p| p.place == place }.sort_by { |p| p.year }
-    year && filter = filter.select { |p| p.year == year }.sort_by { |p| p.place }
+    place && filter = filter.select { |p| p.place == place }.sort_by { |p| p.year.to_i }
+    year && filter = filter.select { |p| p.year == year }.sort_by { |p| p.place.to_i }
     type && filter = filter.select { |p| p.competitor.type == type }
     comp_name && filter = filter.select { |p| p.competitor.name == name }
     filter

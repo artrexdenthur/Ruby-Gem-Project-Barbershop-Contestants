@@ -67,32 +67,18 @@ class CLI
     # parses the given input between command types.
     # full "quartet" and "chorus" parsing is in other methods.
     system "clear" or system "cls"
-    commands = command.downcase.split
-    # TODO: uncomment next line when new command system is ready
-    # parse_command_verb(commands) || show_competitor(commands) || no_command
-    command_verb_hash = {
-      "quar" => :quartet,
-      "chor" => :chorus,
-      "help" => :help,
-      "quit" => :quit
-    }
-    # binding.pry
-    # TODO: refactor to include a verb parsing method and a
-    # competitor finding method
-    command_verb = command_verb_hash.keys.find { |v| commands[0].start_with?(v) }
-    competitor = Competitor.all.find { |c| c.name.downcase == command.downcase }
-    if command_verb
-      send(command_verb_hash[command_verb], commands.drop(1))
-    elsif competitor
-      print_competitor(competitor)
+    command_arr = command.downcase.split
+    if command_arr[0] # the user typed something
+      parse_command_verb(command_arr) || show_competitor(command) || no_command
     else
       no_command
     end
   end
 
   def self.parse_command_verb(commands)
-    verb = @command_verb_hash.keys.find { |v| commands[0].start_with?(v) }
-    verb ? send(verb[0], verb[1], commands.drop(1)) : false
+    verb = @command_verb_hash.find { |k, _| commands[0].start_with?(k) }
+    # binding.pry
+    verb ? send(verb[1][0], verb[1][1], commands.drop(1)) : false
   end
 
   def self.display(type, commands)
@@ -100,19 +86,36 @@ class CLI
     # commands contains remainder of user input as string array
     if commands.any? { |c| c.start_with?("cham") } # check for champs command
       display_champs(type)
-    elsif (year = commands.find { |c| type_years_hash[type].contains? c.to_i }.to_i)
-      display_year(year, type)
+      true
+    elsif (year = commands.find { |c| @type_years_hash[type].include? c.to_i })
+      display_year(year.to_i, type)
+      true
     else
       false
     end
   end
 
   def self.display_champs(type)
-    champs_arr = Peformance.filter_all(place: 1, type: type)
+    champs_arr = Performance.filter_all(place: 1, type: type)
+    title = "BHS International #{type.capitalize} Champions"
+    headers = ["Year", type.capitalize, "District", "Score"]
+    rows = champs_arr.map do |p|
+      disp_arr = []
+      disp_arr.push(p.year, p.competitor.name, p.competitor.district, p.score)
+    end
+    true
   end
 
   def self.display_year(year, type)
-
+    Scraper.scrape_and_create_year(@source, year, type)
+    year_arr = Performance.filter_all(year: year, type: type)
+    title = "BHS International #{type.capitalize} Competition #{year}"
+    headers = ["Place", type.capitalize, "District", "Score"]
+    rows = year_arr.map do |p|
+      disp_arr = []
+      disp_arr.push(p.place, p.competitor.name, p.competitor.district, p.score)
+    end
+    print_tty_table(title: title, headers: headers, rows: rows)
   end
 
   def self.help(*_)
@@ -123,6 +126,34 @@ class CLI
     puts "Goodbye!"
     IRB.start(__FILE__)
     exit
+  end
+
+  def self.show_competitor(name)
+    c = Competitor.all.find{ |c| c.name.downcase == name }
+    if c
+      puts c.name, c.type.capitalize, "District: #{c.district}"
+      if c.type == "quartet"
+        c.comments && (puts "Comments: #{c.comments}")
+        c.members && (puts "Members: #{c.members}")
+      else
+        c.director && (puts "Director: #{c.director}")
+        c.hometown && (puts "Hometown: #{c.hometown}")
+      end
+    end
+
+
+    puts "You've chosen to display #{name}"
+    true
+  end
+
+  def self.print_tty_table(title: nil, headers: nil, rows:)
+    puts title if title
+    if headers
+      table = TTY::Table.new headers, rows
+    else
+      table = TTY::Table.new rows
+    end
+    puts table.render(:ascii, padding: [0,1,0,1])
   end
 
   def self.no_command
