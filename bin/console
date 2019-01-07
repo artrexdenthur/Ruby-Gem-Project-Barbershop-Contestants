@@ -14,4 +14,3 @@ require "pry"
 require "irb"
 
 require "barbershop_contestants"
-IRB.start(__FILE__)
