@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "barbershop_contestants/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "barbershop-contestants"
+  spec.name          = "barbershop_contestants"
   spec.version       = BarbershopContestants::VERSION
   spec.authors       = ["Paul Ashour"]
   spec.email         = ["paul.ashour@gmail.com"]
