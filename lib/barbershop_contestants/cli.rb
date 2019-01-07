@@ -157,7 +157,6 @@ class CLI
 
   def self.quit(*_)
     puts "Goodbye!"
-    IRB.start(__FILE__)
     exit
   end
 
