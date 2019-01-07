@@ -10,7 +10,8 @@ class CLI
     "quar" => [:display, "quartet"],
     "chor" => [:display, "chorus"],
     "help" => [:help, ""],
-    "quit" => [:quit, ""]
+    "quit" => [:quit, ""],
+    "load" => [:load, ""]
   }
 
   @type_years_hash = {
@@ -47,7 +48,7 @@ class CLI
     # binding.pry
     loop do
       puts "\nEnter a command:"
-      process_command(gets.chomp)
+      process_command(gets.chomp.downcase)
     end
   end
 
@@ -56,9 +57,12 @@ class CLI
     puts "To see all entries in a contest, enter the type of contest " \
           "(quartet or chorus) and the year (1939-2018 for quartets, " \
           "1953-2018 for choruses)"
-    puts "To see all performances by a group, enter the name of the group"
+    puts "To see all performances currently in cache by a particular group, " \
+          "enter the name of the group"
     puts "To see a list of all champions for a contest type, enter " \
         "'quartet champions' or 'chorus champions'"
+    puts "To load all contests, or all contests of one type, " \
+        "enter 'load all', 'load quartets', or 'load choruses'"
     puts "To quit, enter 'quit'"
     puts "To see this info again, enter 'help'"
   end
@@ -67,7 +71,7 @@ class CLI
     # parses the given input between command types.
     # full "quartet" and "chorus" parsing is in other methods.
     system "clear" or system "cls"
-    command_arr = command.downcase.split
+    command_arr = command.split
     if command_arr[0] # the user typed something
       parse_command_verb(command_arr) || show_competitor(command) || no_command
     else
@@ -118,6 +122,33 @@ class CLI
     print_tty_table(title: title, headers: headers, rows: rows)
   end
 
+  def self.load(_, commands)
+    case commands
+    when commands.any? { |c| c.start_with?("quar") }
+      type = "quartet"
+    when commands.any? { |c| c.start_with?("chor") }
+      type = "chorus"
+    else
+      type = nil
+    end
+    load_all(type)
+    true
+  end
+
+  def self.load_all(type)
+    if type
+      @type_years_hash[type].each do |y|
+        Scraper.scrape_and_create_year(@source, y, type)
+      end
+    else
+      @type_years_hash.each do |type, year_range|
+        year_range.each do |year|
+          Scraper.scrape_and_create_year(@source, year, type)
+        end
+      end
+    end
+  end
+
   def self.help(*_)
     request_command
   end
@@ -129,25 +160,41 @@ class CLI
   end
 
   def self.show_competitor(name)
-    c = Competitor.all.find{ |c| c.name.downcase == name }
-    if c
-      puts c.name, c.type.capitalize, "District: #{c.district}"
-      if c.type == "quartet"
-        c.comments && (puts "Comments: #{c.comments}")
-        c.members && (puts "Members: #{c.members}")
+    comp = Competitor.all.find{ |c| c.name.downcase == name }
+    # binding.pry
+    if comp
+      puts comp.name, comp.type.capitalize, "District: #{comp.district}"
+      if comp.type == "quartet"
+        comp.comments && (puts "Comments: #{comp.comments}")
+        comp.members && (puts "Members: #{comp.members}")
       else
-        c.director && (puts "Director: #{c.director}")
-        c.hometown && (puts "Hometown: #{c.hometown}")
+        comp.director && (puts "Director: #{comp.director}")
+        comp.hometown && (puts "Hometown: #{comp.hometown}")
       end
+      show_competitor_performances(comp)
+    else
+      false
     end
-
-
-    puts "You've chosen to display #{name}"
     true
+  end
+
+  def self.show_competitor_performances(com)
+    title = "Performances"
+    headers = ["Year", "Place", "Score"]
+    headers << "# On Stage" if com.type == "chorus"
+    com.performances.sort { |p| p.year }
+    rows = com.performances.map do |p|
+      disp_arr = []
+      disp_arr.push(p.number_on_stage) if com.type == "chorus"
+      disp_arr.unshift(p.year, p.place, p.score)
+    end
+    # binding.pry
+    print_tty_table(title: title, headers: headers, rows: rows)
   end
 
   def self.print_tty_table(title: nil, headers: nil, rows:)
     puts title if title
+    # binding.pry
     if headers
       table = TTY::Table.new headers, rows
     else
@@ -161,92 +208,4 @@ class CLI
     request_command
   end
 
-  def self.quartet(args_arr) # deprecated to display command
-    year = args_arr.find { |c| (1939..2018).include?(c.to_i) }
-    if args_arr.any? { |c| c.start_with?("cham") }
-      # binding.pry
-      # Performance.all.find_all do |p|
-      #   p.place == 1 && p.competitor.type == "quartet"
-      # end.sort_by { |p| p.year }.each do |p|
-      Performance.filter_all(year: year, place: 1, type: "quartet").each do |p|
-        puts "Year: #{p.year}\tName: #{p.competitor.name}\tScore: #{p.score}"
-      end
-    elsif year # looking for a year
-      puts "Scraping Quartet Competition for #{year}"
-      Scraper.scrape_and_create_quartet_year(@source, year)
-      Performance.all.find_all do |p|
-        p.year == year && p.competitor.type == "quartet"
-      end.sort_by { |p| p.place.to_i }.each do |p|
-        puts "Place: #{p.place}\t" \
-              "Name: #{p.competitor.name}\t" \
-              "District: #{p.competitor.district}\t" \
-              "Score: #{p.score}\t"
-      end
-    else
-      no_command
-    end
-  end
-
-  def self.chorus(args_arr) # branches a 'chorus' verb
-    year = args_arr.find { |c| (1953..2018).include?(c.to_i) }
-    if args_arr.any? { |c| c.start_with?("cham") }
-      Performance.all.find_all do |p|
-        p.place == 1 && p.competitor.type == "chorus"
-      end.sort_by { |p| p.year }.each do |p|
-        puts "Year: #{p.year}\tName: #{p.competitor.name}\tScore: #{p.score}"
-      end
-    elsif year # looking for a year
-      puts "You've selected 'Chorus Contest for #{year}'"
-    else
-      no_command
-    end
-  end
-
-  def self.print_chorus_year_table(year)
-    title = "International Chorus Competition #{year}"
-    headers = ["Place", "Chorus", "District", "Score"]
-    Performance.all.find_all do |p|
-      p.year == year
-    end
-  end
-
-  def self.print_champ_type_by_year(type)
-    table = Terminal::Table.new header: ["year", type, "score"]
-    Performance.champs_type_by_year(type).each do |p|
-      table.add_row [p.year, p.competitor.name, p.score]
-    end
-  end
-
-  def self.print_competitor(competitor)
-    puts "Name: #{competitor.name}"
-    if competitor.type == 'quartet'
-      puts "Type: #{competitor.type.capitalize}"
-      puts "District: #{competitor.district}"
-      puts "Comments: #{competitor.comments}" if competitor.comments
-      puts "Members: #{competitor.members}"
-      print_performances_by_competitor(competitor)
-    elsif competitor.type == 'chorus'
-      puts "Type: #{competitor.type.capitalize}"
-      puts "Director: #{competitor.current_director}"
-      puts "Hometown: #{competitor.hometown}"
-      print_performances_by_competitor(competitor)
-    end
-  end
-
-  def self.print_performances_by_competitor(competitor)
-    puts "Contests:"
-    chorus = (competitor.type == 'chorus')
-    competitor.performances.each do |p|
-      if p.contest.city
-        puts "\t#{p.contest.year} International at #{p.contest.city}"
-      else
-        puts "\t#{p.contest.year} International"
-      end
-      # contest, score, place
-      puts "\t\tDirector: #{p.director}" if chorus
-      puts "\t\tScore: #{p.score}"
-      puts "\t\tPlace: #{p.place}"
-      puts "\t\tNumber on stage: #{p.number_on_stage}" if chorus && p.number_on_stage.to_i > 0
-    end
-  end
 end

@@ -94,7 +94,7 @@ class Scraper
       # binding.pry
       row_data = row.text.split("\n")
       q_champs_hash = {
-        year: row_data[1],
+        year: row_data[1].to_i,
         name: row_data[2],
         score: row_data[3],
         district: row_data[4],
@@ -103,7 +103,7 @@ class Scraper
         place: 1, # champions definitionally are first place
         type: "quartet"
       }
-      Performance.create_performance(q_champs_hash, "quartet")
+      Performance.find_or_create(q_champs_hash, "quartet")
       # binding.pry
     end
   end
@@ -124,7 +124,7 @@ class Scraper
       row_data = row.text.split("\n")
       # binding.pry
       c_champs_hash = {
-        year: row_data[1],
+        year: row_data[1].to_i,
         name: row_data[2],
         hometown_and_district: row_data[3],
         director: row_data[4],
@@ -133,7 +133,7 @@ class Scraper
         place: 1, # champions definitionally are first place
         type: "chorus"
       }
-      Performance.create_c_performance(c_champs_hash)
+      Performance.find_or_create(c_champs_hash, "chorus")
     end
   end
 
@@ -168,7 +168,8 @@ class Scraper
           district: row_data[3],
           score: row_data[4]
         }
-        Performance.create_performance(year_hash, type)
+        year_hash[:number_on_stage] = row_data[5] if type == "chorus"
+        Performance.find_or_create(year_hash, type)
       end
     end
   end
@@ -179,7 +180,14 @@ class Scraper
                LOCATIONS[(type[0] + "_year").to_sym][source].join(year.to_s)
     doc = load_cache || scrape_or_load(location)
     tables_node = doc.css(".wikitable")
-    tables_node.map { |t| t.css("tr").drop(1) }
+    tables_arr = []
+    tables_node.each do |t|
+      # binding.pry
+      unless t.css("tr").first.text.include?("Admin")
+        tables_arr << t.css("tr").drop(1)
+      end
+    end
+    tables_arr
     # binding.pry
   end
 

@@ -53,6 +53,12 @@ class Performance
     performance
   end
 
+  def self.find_or_create(arg_hash, type)
+    found = self.all.find do |p|
+      p.year == arg_hash[:year] && p.competitor.name == arg_hash[:name]
+    end
+    found || create_performance(arg_hash, type)
+  end
 
   def self.champs_type_by_year(type)
     all.select { |p| p.place == 1 && p.contest.type = type }.sort_by { |p| p.year }
