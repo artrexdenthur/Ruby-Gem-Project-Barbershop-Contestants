@@ -23,6 +23,7 @@ class CLI
     # welcome the user and show command list
     # have the bin file call this method
     # scrape data from here, logic primarily in scraper
+    system "clear" or system "cls"
     puts @welcome_message
     @source = choose_source
     Scraper.scrape_and_create_quartet_champs(@source)

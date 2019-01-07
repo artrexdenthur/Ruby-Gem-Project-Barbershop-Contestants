@@ -54,13 +54,6 @@ class Scraper
   # but should not worry about the data classes'
   # architecture
 
-  # def get_contest_year_site(year, contest_type = 'quartet', scrape_location = 'web')
-  #   case scrape_location
-  #   when 'web'
-  #     "https://www.barbershopwiki.com"
-  #   end
-  # end
-
   def self.load_cache
     # loaded = {}
     # CACHE_LOCATIONS.each do |key, loc|
@@ -106,6 +99,7 @@ class Scraper
       Performance.find_or_create(q_champs_hash, "quartet")
       # binding.pry
     end
+    system "clear" or system "cls"
   end
 
   def self.scrape_chorus_champs(source)
@@ -135,24 +129,12 @@ class Scraper
       }
       Performance.find_or_create(c_champs_hash, "chorus")
     end
+    system "clear" or system "cls"
   end
-
-  # def self.scrape_quartet_year(source, year)
-  #   puts "Scraping Quartet Contest for #{year}"
-  #   location = LOCATIONS[:base][source] + LOCATIONS[:q_year][source].join(year.to_s)
-  #   doc = load_cache || scrape_or_load(location)
-  #   tables_node = doc.css(".wikitable")
-  #   tables = []
-  #   tables_node.each do |t|
-  #     tables << t.css("tr").drop(1)  # remove headers
-  #   end
-  #   tables
-  #   # binding.pry
-  # end
 
   def self.scrape_and_create_year(source, year, type)
     if @years_scraped[type].include?(year)
-      puts "#{year} already scraped"
+      # puts "#{year} already scraped" # for debugging
       return true
     end
     @years_scraped[type] << year
@@ -172,6 +154,7 @@ class Scraper
         Performance.find_or_create(year_hash, type)
       end
     end
+    system "clear" or system "cls"
   end
 
   def self.scrape_year(source, year, type)
@@ -191,42 +174,4 @@ class Scraper
     # binding.pry
   end
 
-  # def self.scrape_and_create_quartet_year(source, year)
-  #   # binding.pry
-  #   scrape_quartet_year(source, year).each do |t|
-  #     # binding.pry
-  #     t.each do |tr|
-  #       row_data = tr.text.split("\n")
-  #       # binding.pry
-  #       q_year_hash = {
-  #         year: year,
-  #         place: row_data[1],
-  #         name: row_data[2],
-  #         district: row_data[3],
-  #         score: row_data[4]
-  #         }
-  #       Performance.create_q_performance(q_year_hash)
-  #     end
-  #   end
-  #   # etc
-  # end
-  #
-  # def self.scrape_chorus_year(source, year)
-  #   puts "Scraping Chorus Contest for #{year}"
-  #   location = LOCATIONS[:base][source] + LOCATIONS[:c_year][source].join(year.to_s)
-  #   doc = load_cache || scrape_or_load(location)
-  #   tables_node = doc.css(".wikitable")
-  #   tables = []
-  #   tables_node.each do |t|
-  #     tables << t.css("tr").drop(1)  # remove headers
-  #   end
-  #   tables
-  #   binding.pry
-  # end
-  #
-  # def self.scrape_and_create_chorus_year(source, year)
-  #   scrape_chorus_year(source, year).each do
-  #
-  #   end
-  # end
 end
