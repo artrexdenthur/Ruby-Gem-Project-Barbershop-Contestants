@@ -2,10 +2,10 @@
 
 A ruby gem that scrapes [the Barbershop Harmony wiki](https://www.barbershopwiki.com/wiki/Barbershop_Wiki_Project) and provides info on contestants in the Barbershop Harmony Society International Competition. This gem is my Ruby CLI project for the [Learn.co](https://learn.co) web development track section one. Shout out to the other members of the "A Bug's Life" cohort!
 
-## Live Demo
+[//]: # "## Live Demo
 
 Here is a Repl.It running a version of the gem:
-https://Barbershop-Contestants.artrexdenthur.repl.run
+https://Barbershop-Contestants.artrexdenthur.repl.run"
 
 ## Installation
 
